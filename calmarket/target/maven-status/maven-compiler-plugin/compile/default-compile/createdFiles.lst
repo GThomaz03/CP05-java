@@ -1,0 +1,10 @@
+br\com\fiap\calmarket\Exception\IdNaoEncontradoException.class
+br\com\fiap\calmarket\Dao\GenericDaoImpl.class
+br\com\fiap\calmarket\Controller\ProdutoController.class
+br\com\fiap\calmarket\Model\Produto.class
+br\com\fiap\calmarket\Model\Setor.class
+br\com\fiap\calmarket\Exception\CommitException.class
+br\com\fiap\calmarket\Dao\ProdutoDaoImpl.class
+br\com\fiap\calmarket\CalmarketApplication.class
+br\com\fiap\calmarket\Dao\GenericDao.class
+br\com\fiap\calmarket\Dao\ProdutoDao.class
