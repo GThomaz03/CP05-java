@@ -1,0 +1,11 @@
+-> GITHUB
+
+https://github.com/Entrega-CheckPoint/JAVA-CP4-CALMARKET
+
+
+| Nome                     | RM     |
+| ------------------------ | ------ |
+| Francesco M Di Benedetto | 557313 |
+| Victor Nieves Britto     | 554557 |
+| Gabriel Alves Thomaz     | 558637 |
+| Gustavo Goulart Bretas   | 555708 |
