@@ -333,7 +333,28 @@ Não é exatamente uma função ou biblioteca específica, mas sim um **estilo d
 Isso aumenta a maturidade e a descoberta da API, pois o próprio retorno indica ao cliente quais operações podem ser feitas a seguir.
 
 ```json
-// vem um exemplo de retorno aqui.
+{
+  "id": 9,
+  "nome": "Monster",
+  "tipo": "Refrigerante",
+  "setor": "BEBIDAS",
+  "tamanho": "1 Uni",
+  "preco": 8.99,
+  "_links": {
+    "self": {
+      "href": "http://104.41.50.45:8082/produtos/9"
+    },
+    "lista": {
+      "href": "http://104.41.50.45:8082/produtos"
+    },
+    "delete": {
+      "href": "http://104.41.50.45:8082/produtos/9"
+    },
+    "update": {
+      "href": "http://104.41.50.45:8082/produtos/9"
+    }
+  }
+}
 ```
 
 <details>
