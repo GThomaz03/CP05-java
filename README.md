@@ -2,9 +2,13 @@
 
 #### Exercício de Revisão Spring com Persistência, Lombok, HATEOAS e Deploy
 
+[integrantes](#integrantes)
+
 ## **Objetivo**
 
 Construir um programa para um mercado express em java, com base no framework spring boot, configurado para o tipo maven, incluindo o Lombok e aplicando o nível de maturidade 3 com HATEOAS.
+
+> Usamos o IntelliJ
 
 ## **Inicialização com Spring Initializr**
 
@@ -518,3 +522,52 @@ Isso significa que:
 
 - **8082** → Porta acessível na VM (externa)
 - **8080** → Porta onde o Spring Boot roda dentro do container
+
+## **Testes**
+
+### _CREATE_
+
+![create](./img/create.png)
+
+---
+
+### _READ_
+
+![find_by_id](./img/find_by_id.png)
+
+#### _READ-ERROR_
+
+![find_by_id_exception](./img/find_by_id_exception.png)
+
+---
+
+### _UPDATE_
+
+![update](./img/update.png)
+
+---
+
+### _DELETE_
+
+![delete](./img/delete.png)
+
+#### _DELETE-ERROR_
+
+![delete_exception](./img/delete_exception.png)
+
+---
+
+### _LIST_
+
+![list](./img/list.png)
+
+---
+
+## **Integrantes**
+
+| Nome                     | RM     |
+| ------------------------ | ------ |
+| Francesco M Di Benedetto | 557313 |
+| Victor Nieves Britto     | 554557 |
+| Gabriel Alves Thomaz     | 558637 |
+| Gustavo Goulart Bretas   | 555708 |
