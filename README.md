@@ -34,6 +34,8 @@ A aplicação "calmarket" está dividida em:
 - Exception
 - resources
 
+---
+
 ### _Model_
 
 Responsável por armazenar as entidades da aplicação, neste caso, a entidade `Produto`.
@@ -136,6 +138,8 @@ public enum Setor {
 ```
 
 </details>
+
+---
 
 ### _Dao_
 
@@ -315,6 +319,8 @@ public class ProdutoDaoImpl extends GenericDaoImpl<Produto, Integer> implements 
 
 </details>
 
+---
+
 ### _Controller_
 
 Responsável por expor os endpoints (URLs) da API e receber as requisições HTTP do cliente, encaminhando-as para a camada de persistência (DAO) e retornando as respostas apropriadas.
@@ -450,6 +456,8 @@ public class ProdutoController {
 
 </details>
 
+---
+
 ## **Application properties**
 
 Arquivo responsável por definir parâmetros de configuração da aplicação.
@@ -467,6 +475,8 @@ Nele ficam centralizadas as informações de conexão com o banco de dados, ajus
 | `spring.jpa.properties.hibernate.format_sql` | Formata a saída dos SQLs no terminal para melhor leitura.                                                            |
 | `spring.jpa.database-platform`               | Define o dialeto do banco (por exemplo, `org.hibernate.dialect.MySQLDialect`).                                       |
 | `server.error.include-message`               | Inclui a mensagem de erro no corpo da resposta HTTP.                                                                 |
+
+---
 
 ## **Deploy**
 
@@ -543,6 +553,8 @@ Isso significa que:
 
 - **8082** → Porta acessível na VM (externa)
 - **8080** → Porta onde o Spring Boot roda dentro do container
+
+---
 
 ## **Testes**
 
