@@ -132,3 +132,295 @@ public enum Setor {
 ```
 
 </details>
+
+### _Dao_
+
+Responsável pela comunicação com o banco de dados e pela persistência das entidades da aplicação.
+
+#### **GenericDao**
+
+Interface genérica que define os métodos base de persistência.
+
+- Utiliza parâmetros genéricos <T, K>, onde:
+  - T: representa uma classe de entidade
+  - K: representa o tipo do ID da entidade
+
+> Usado como boas práticas no processo de desenvolvimento
+
+<details>
+  <summary><b>GenericDao</b></summary>
+
+```java
+package br.com.fiap.calmarket.Dao;
+
+import java.util.List;
+
+public interface GenericDao<T,K> {
+    T cadastrar (T entidade);
+
+    void remover(K id);
+
+    T buscar(K id);
+
+    T atualizar(T entidade, K id);
+
+    List<T> listar();
+}
+
+```
+
+</details>
+
+#### **GenericDaoImpl**
+
+Implementação da interface GenericDao, contendo a lógica para persistência, consulta, atualização e remoção de registros via EntityManager.
+
+- @PersistenceContext: Injeta o EntityManager da JPA, responsável pela comunicação com o banco.
+- @Transactional: Garante que as operações sejam executadas dentro de uma transação.
+
+Embora nesta aplicação o uso de apenas uma entidade não evidencie seu impacto, o padrão DAO genérico oferece vantagens como:
+
+- Reutilização de código
+- Padronização
+- Escalabilidade
+- Facilidade de manutenção
+
+> DRY — Don't Repeat Yourself
+
+<details>
+  <summary><b>GenericDaoImpl</b></summary>
+
+```java
+package br.com.fiap.calmarket.Dao;
+
+import br.com.fiap.calmarket.Exception.IdNaoEncontradoException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+
+public class GenericDaoImpl<T, K> implements GenericDao<T, K> {
+
+    @PersistenceContext
+    protected EntityManager em;
+
+    private final Class<T> clazz;
+
+    @SuppressWarnings("unchecked")
+    public GenericDaoImpl() {
+        this.clazz = (Class<T>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    @Override
+    @Transactional
+    public T cadastrar(T entidade) {
+        return em.merge(entidade); // ou persist se for novo
+    }
+
+    @Override
+    @Transactional
+    public void remover(K id) {
+        T entidade = buscar(id);
+        em.remove(entidade);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public T buscar(K id) {
+        T entidade = em.find(clazz, id);
+        if (entidade == null)
+            throw new IdNaoEncontradoException("ID NÃO ENCONTRADO");
+        return entidade;
+    }
+
+    @Override
+    @Transactional
+    public T atualizar(T entidade, K id) {
+        T object = em.find(clazz, id);
+        if (object == null)
+            throw new IdNaoEncontradoException("ID NÃO ENCONTRADO");
+        return em.merge(entidade);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> listar() {
+        return em.createQuery("FROM " + clazz.getSimpleName(), clazz).getResultList();
+    }
+}
+
+```
+
+</details>
+
+#### **ProdutoDao**
+
+ProdutoDao
+
+Interface que estende GenericDao, ajustando os tipos genéricos para a entidade Produto.
+
+- Define <Produto, Integer>, especificando o tipo de entidade e o tipo de ID.
+- Não adiciona novos métodos, mas permite especialização futura.
+
+> Promove reutilização sem duplicação de lógica.
+
+<details>
+  <summary><b>ProdutoDao</b></summary>
+
+```java
+package br.com.fiap.calmarket.Dao;
+
+import br.com.fiap.calmarket.Model.Produto;
+
+public interface ProdutoDao extends GenericDao<Produto, Integer> {
+
+}
+
+```
+
+</details>
+
+#### **ProdutoDaoImpl**
+
+Classe que implementa _ProdutoDao_ e estende _GenericDaoImpl_, herdando toda a lógica de persistência.
+
+- Anotada com @Repository, tornando-a um componente do Spring para gerenciamento de persistência.
+
+> O uso da DAO genérica reduz significativamente a duplicação de código.
+
+<details>
+  <summary><b>ProdutoDaoImpl</b></summary>
+
+```java
+package br.com.fiap.calmarket.Dao;
+
+import br.com.fiap.calmarket.Model.Produto;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class ProdutoDaoImpl extends GenericDaoImpl<Produto, Integer> implements ProdutoDao {
+    public ProdutoDaoImpl() {
+        super();
+    }
+}
+
+```
+
+</details>
+
+### _Controller_
+
+Responsável por expor os endpoints (URLs) da API e receber as requisições HTTP do cliente, encaminhando-as para a camada de persistência (DAO) e retornando as respostas apropriadas.
+
+Na aplicação, temos apenas o ProdutoController.
+
+- @RestController: Marca a classe como um controlador REST, permitindo o retorno de objetos JSON diretamente.
+- @RequestMapping("/produtos"): Define o caminho base para todos os endpoints da classe.
+- @Autowired: Injeta automaticamente a dependência (ProdutoDaoImpl) para acesso ao banco de dados.
+
+#### **HATEOAS**
+
+**HATEOAS** (Hypermedia As The Engine Of Application State) é um princípio de arquitetura REST.
+Não é exatamente uma função ou biblioteca específica, mas sim um **estilo de construir APIs**, onde a resposta não só traz os dados, mas também **fornece links** para ações relacionadas.
+
+Isso aumenta a maturidade e a descoberta da API, pois o próprio retorno indica ao cliente quais operações podem ser feitas a seguir.
+
+```json
+// vem um exemplo de retorno aqui.
+```
+
+<details>
+  <summary><b>ProdutoController</b></summary>
+
+```java
+package br.com.fiap.calmarket.Controller;
+
+import br.com.fiap.calmarket.Dao.ProdutoDaoImpl;
+import br.com.fiap.calmarket.Model.Produto;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+@RestController
+@RequestMapping("/produtos")
+public class ProdutoController {
+
+    private final ProdutoDaoImpl produtoDao;
+
+    @Autowired
+    public ProdutoController(ProdutoDaoImpl produtoDao) {
+        this.produtoDao = produtoDao;
+    }
+
+    @GetMapping("/index")
+    public ResponseEntity<String> index() {
+        return ResponseEntity.ok("Produtos");
+    }
+
+    @GetMapping()
+    public List<Produto> listar() {
+        return produtoDao.listar();
+    }
+
+    @GetMapping("/{id}")
+    public EntityModel<Produto> procurarPorId(@PathVariable int id) {
+        Produto produto = produtoDao.buscar(id);
+        return EntityModel.of(produto,
+                linkTo(methodOn(ProdutoController.class).procurarPorId(id)).withSelfRel(),
+                linkTo(methodOn(ProdutoController.class).listar()).withRel("lista"),
+                linkTo(methodOn(ProdutoController.class).removerPorId(id)).withRel("delete"),
+                linkTo(methodOn(ProdutoController.class).atualizar(id, produto)).withRel("update")
+        );
+    }
+
+    @PostMapping("/cadastrar")
+    public ResponseEntity<EntityModel<Produto>> cadastrar(@RequestBody @Valid Produto produto) {
+        Produto novo = produtoDao.cadastrar(produto);
+
+        EntityModel<Produto> model = EntityModel.of(novo,
+                linkTo(methodOn(ProdutoController.class).procurarPorId(novo.getId())).withSelfRel(),
+                linkTo(methodOn(ProdutoController.class).listar()).withRel("lista"),
+                linkTo(methodOn(ProdutoController.class).atualizar(novo.getId(), novo)).withRel("update"),
+                linkTo(methodOn(ProdutoController.class).removerPorId(novo.getId())).withRel("delete")
+        );
+
+        return ResponseEntity
+                .created(linkTo(methodOn(ProdutoController.class).procurarPorId(novo.getId())).toUri())
+                .body(model);
+    }
+
+
+    @PutMapping("/{id}")
+    public EntityModel<Produto> atualizar(@PathVariable int id, @Valid @RequestBody Produto produto) {
+        Produto atualizado = produtoDao.atualizar(produto, id);
+
+        return EntityModel.of(atualizado,
+                linkTo(methodOn(ProdutoController.class).procurarPorId(id)).withSelfRel(),
+                linkTo(methodOn(ProdutoController.class).listar()).withRel("lista"),
+                linkTo(methodOn(ProdutoController.class).removerPorId(id)).withRel("delete")
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerPorId(@PathVariable int id) {
+        produtoDao.remover(id);
+        return ResponseEntity.noContent().build(); // 204
+    }
+
+
+}
+
+```
+
+</details>
