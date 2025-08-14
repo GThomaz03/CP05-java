@@ -424,3 +424,97 @@ public class ProdutoController {
 ```
 
 </details>
+
+## **Application properties**
+
+Arquivo responsável por definir parâmetros de configuração da aplicação.
+
+Nele ficam centralizadas as informações de conexão com o banco de dados, ajustes do Hibernate e comportamento geral do servidor.
+
+| **Propriedade**                              | **Função**                                                                                                           |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `spring.application.name`                    | Define o nome da aplicação.                                                                                          |
+| `spring.datasource.url`                      | URL de conexão com o banco de dados.                                                                                 |
+| `spring.datasource.username`                 | Usuário do banco de dados.                                                                                           |
+| `spring.datasource.password`                 | Senha do banco de dados.                                                                                             |
+| `spring.jpa.hibernate.ddl-auto`              | Controla se o Hibernate deve criar, atualizar ou validar o schema do banco (`create`, `update`, `validate`, `none`). |
+| `spring.jpa.show-sql`                        | Exibe no terminal os comandos SQL executados.                                                                        |
+| `spring.jpa.properties.hibernate.format_sql` | Formata a saída dos SQLs no terminal para melhor leitura.                                                            |
+| `spring.jpa.database-platform`               | Define o dialeto do banco (por exemplo, `org.hibernate.dialect.MySQLDialect`).                                       |
+| `server.error.include-message`               | Inclui a mensagem de erro no corpo da resposta HTTP.                                                                 |
+
+## **Deploy**
+
+O deploy da aplicação foi realizado em uma **máquina virtual (VM) Linux** hospedada na **Microsoft Azure**, utilizando **Docker** para encapsular e executar os serviços.
+
+A aplicação roda em **dois containers**:
+
+1. **MySQL** – Banco de dados da aplicação
+2. **Aplicação Java** – API desenvolvida em Spring Boot, empacotada em um arquivo `.jar`
+
+### **Docker Compose**
+
+O _docker-compose_ é responsável por **subir e orquestrar os containers**.
+Na nossa configuração:
+
+1. **Primeiro** o banco de dados (mysql) é iniciado.
+2. **Depois** a aplicação Java (calmarket-app) é iniciada, garantindo que o banco já esteja pronto para conexões.
+
+Para executar:
+
+```bash
+git clone https://github.com/Entrega-CheckPoint/JAVA-CP4-CALMARKET
+
+docker compose up -d --build
+```
+
+<details>
+  <summary><b>docker-compose.yml</b></summary>
+
+```yaml
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: calmarket-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: calmarket
+      MYSQL_USER: caluser
+      MYSQL_PASSWORD: calpass
+    volumes:
+      - calmarket_data:/var/lib/mysql
+    restart: unless-stopped
+
+  calmarket-app:
+    build: ./calmarket
+    container_name: calmarket-api
+    depends_on:
+      - mysql
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
+
+volumes:
+  calmarket_data:
+```
+
+</details>
+
+### **Mapeamento de Portas**
+
+No parâmetro `ports` usamos a sintaxe **`host:container`**, que mapeia uma porta da máquina hospedeira para a porta interna do container.
+
+Aplicação:
+
+```yaml
+ports:
+  - "8082:8080"
+```
+
+Isso significa que:
+
+- **8082** → Porta acessível na VM (externa)
+- **8080** → Porta onde o Spring Boot roda dentro do container
