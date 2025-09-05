@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Produto</title>
+</head>
+<body>
+<h1>Excluir Produto</h1>
+<p>Tem certeza que deseja excluir o produto <strong th:text="${produto.nome}"></strong>?</p>
+
+<form th:action="@{/produtos/view/excluir/{id}(id=${produto.id})}" method="post">
+    <button type="submit">Sim, excluir</button>
+</form>
+<a th:href="@{/produtos/view}">Cancelar</a>
+</body>
+</html>

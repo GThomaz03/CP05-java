@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CalMarket</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<h1>Bem-vindo ao CalMarket</h1>
+<nav>
+    <a th:href="@{/produtos/view}">Listar Produtos</a> |
+    <a th:href="@{/produtos/view/cadastrar}">Cadastrar Produto</a>
+</nav>
+</body>
+</html>
