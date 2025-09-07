@@ -1,15 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>CalMarket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalMarket - Início</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-<h1>Bem-vindo ao CalMarket</h1>
-<nav>
-    <a th:href="@{/produtos/view}">Listar Produtos</a> |
-    <a th:href="@{/produtos/view/cadastrar}">Cadastrar Produto</a>
-</nav>
+<!-- Header -->
+<header>
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>CalMarket</h1>
+        <nav>
+            <a th:href="@{/produtos/view}">Produtos</a>
+            <a th:href="@{/produtos/view/cadastrar}">Cadastrar Produto</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Main -->
+<main>
+    <div class="container" style="text-align: center; margin-top: 60px;">
+        <h2>Bem-vindo ao CalMarket</h2>
+        <p>Gerencie seus produtos de forma simples e eficiente.</p>
+        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
+            <a th:href="@{/produtos/view}" class="btn btn-blue">Ver Produtos</a>
+            <a th:href="@{/produtos/view/cadastrar}" class="btn btn-green">Cadastrar Produto</a>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>© 2025 CalMarket - Todos os direitos reservados.</p>
+</footer>
 </body>
 </html>

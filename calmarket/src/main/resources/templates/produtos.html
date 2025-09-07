@@ -1,37 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Produtos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos - CalMarket</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-<h1>Produtos do Mercado</h1>
-<a th:href="@{/}">Voltar</a> |
-<a th:href="@{/produtos/view/cadastrar}">Cadastrar Novo Produto</a>
+<!-- Header -->
+<header>
+    <div class="container flex justify-between">
+        <h1>CalMarket</h1>
+        <a th:href="@{/produtos/view/cadastrar}" class="btn btn-green">+ Produto</a>
+        <a th:href="@{/}" class="btn btn-gray">Voltar</a>
+    </div>
+</header>
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Tipo</th>
-        <th>Setor</th>
-        <th>Tamanho</th>
-        <th>Preço</th>
-        <th>Ações</th>
-    </tr>
-    <tr th:each="produto : ${produtos}">
-        <td th:text="${produto.id}"></td>
-        <td th:text="${produto.nome}"></td>
-        <td th:text="${produto.tipo}"></td>
-        <td th:text="${produto.setor}"></td>
-        <td th:text="${produto.tamanho}"></td>
-        <td th:text="${produto.preco}"></td>
-        <td>
-            <a th:href="@{/produtos/view/editar/{id}(id=${produto.id})}">Editar</a> |
-            <a th:href="@{/produtos/view/excluir/{id}(id=${produto.id})}">Excluir</a>
-        </td>
-    </tr>
-</table>
+<!-- Main -->
+<main>
+    <h2>Lista de Produtos</h2>
+    <div class="container">
+        <table>
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Setor</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="produto : ${produtos}">
+                <td th:text="${produto.nome}"></td>
+                <td th:text="${produto.preco}"></td>
+                <td th:text="${produto.setor}"></td>
+                <td>
+                    <a th:href="@{'/produtos/view/editar/' + ${produto.id}}" class="btn btn-yellow">Editar</a>
+                    <a th:href="@{'/produtos/view/excluir/' + ${produto.id}}" class="btn btn-red">Excluir</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>© 2025 CalMarket</p>
+</footer>
 </body>
 </html>
