@@ -22,9 +22,13 @@
 
         <label for="nome">Nome</label>
         <input id="nome" type="text" th:field="*{nome}" required>
+        <p th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}" class="error"></p>
+
 
         <label for="tipo">Tipo</label>
         <input id="tipo" type="text" th:field="*{tipo}" required>
+        <p th:if="${#fields.hasErrors('tipo')}" th:errors="*{tipo}" class="error"></p>
+
 
         <label for="setor">Setor</label>
         <select id="setor" th:field="*{setor}" required>
@@ -37,9 +41,11 @@
 
         <label for="tamanho">Tamanho</label>
         <input id="tamanho" type="text" th:field="*{tamanho}" required>
+        <p th:if="${#fields.hasErrors('tamanho')}" th:errors="*{tamanho}" class="error"></p>
 
         <label for="preco">Preço</label>
         <input id="preco" type="number" step="0.01" th:field="*{preco}" required>
+        <p th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}" class="error"></p>
 
         <button type="submit" class="btn btn-green">Salvar</button>
     </form>

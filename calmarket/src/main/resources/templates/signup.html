@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cadastro - CalMarket</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<header>
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>CalMarket</h1>
+        <nav>
+            <a th:href="@{/login}" class="btn btn-blue">Login</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+        <h2>Criar Conta</h2>
+        <form method="post" th:action="@{/signup}" th:object="${usuario}">
+            <label>Nome:</label>
+            <input type="text" th:field="*{nome}" placeholder="Digite seu nome"/>
+
+            <label>Email:</label>
+            <input type="email" th:field="*{email}" placeholder="Digite seu email"/>
+
+            <label>Senha:</label>
+            <input type="password" th:field="*{senha}" placeholder="Digite sua senha"/>
+
+            <button type="submit" class="btn btn-green">Cadastrar</button>
+        </form>
+        <div class="form-footer">
+            <a th:href="@{/login}">Já tem conta?</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 CalMarket - Todos os direitos reservados.</p>
+</footer>
+</body>
+</html>

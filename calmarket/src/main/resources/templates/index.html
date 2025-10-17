@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +9,26 @@
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
+
 <!-- Header -->
 <header>
     <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
         <h1>CalMarket</h1>
-        <nav>
-            <a th:href="@{/produtos/view}">Produtos</a>
-            <a th:href="@{/produtos/view/cadastrar}">Cadastrar Produto</a>
+        <nav style="display: flex; gap: 10px;">
+            <!-- Links para usuários autenticados -->
+            <div sec:authorize="isAuthenticated()" style="display: flex; gap: 10px;">
+                <a th:href="@{/produtos/view}" class="btn btn-blue">Produtos</a>
+                <a th:href="@{/produtos/view/cadastrar}" class="btn btn-green">Cadastrar Produto</a>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-red">Logout</button>
+                </form>
+            </div>
+
+            <!-- Links para visitantes -->
+            <div sec:authorize="isAnonymous()" style="display: flex; gap: 10px;">
+                <a th:href="@{/login}" class="btn btn-blue">Login</a>
+                <a th:href="@{/signup}" class="btn btn-green">Cadastrar</a>
+            </div>
         </nav>
     </div>
 </header>
@@ -21,11 +36,19 @@
 <!-- Main -->
 <main>
     <div class="container" style="text-align: center; margin-top: 60px;">
-        <h2>Bem-vindo ao CalMarket</h2>
-        <p>Gerencie seus produtos de forma simples e eficiente.</p>
-        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
-            <a th:href="@{/produtos/view}" class="btn btn-blue">Ver Produtos</a>
-            <a th:href="@{/produtos/view/cadastrar}" class="btn btn-green">Cadastrar Produto</a>
+        <div class="card" style="padding: 40px;">
+            <h2>Bem-vindo ao CalMarket</h2>
+            <p>Gerencie seus produtos de forma simples e eficiente.</p>
+
+            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <!-- Botões para usuários autenticados -->
+                <a th:href="@{/produtos/view}" class="btn btn-blue" sec:authorize="isAuthenticated()">Ver Produtos</a>
+                <a th:href="@{/produtos/view/cadastrar}" class="btn btn-green" sec:authorize="isAuthenticated()">Cadastrar Produto</a>
+
+                <!-- Botões para visitantes -->
+                <a th:href="@{/login}" class="btn btn-blue" sec:authorize="isAnonymous()">Fazer Login</a>
+                <a th:href="@{/signup}" class="btn btn-green" sec:authorize="isAnonymous()">Criar Conta</a>
+            </div>
         </div>
     </div>
 </main>
@@ -34,5 +57,6 @@
 <footer>
     <p>© 2025 CalMarket - Todos os direitos reservados.</p>
 </footer>
+
 </body>
 </html>

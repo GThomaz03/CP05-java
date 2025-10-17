@@ -30,7 +30,7 @@
         <label for="setor">Setor</label>
         <select id="setor" th:field="*{setor}" required>
             <option value="" disabled>Selecione um setor</option>
-            <option th:each="s : ${T(br.com.fiap.calmarket.Model.Setor).values()}"
+            <option th:each="s : ${T(br.com.fiap.calmarket.model.Setor).values()}"
                     th:value="${s}"
                     th:text="${s}"
                     th:selected="${s == produto.setor}">
