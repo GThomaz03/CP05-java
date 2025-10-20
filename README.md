@@ -596,6 +596,7 @@ Isso significa que:
 
 ---
 
+
 ## **Integrantes**
 
 | Nome                     | RM     |
@@ -604,3 +605,4 @@ Isso significa que:
 | Victor Nieves Britto     | 554557 |
 | Gabriel Alves Thomaz     | 558637 |
 | Gustavo Goulart Bretas   | 555708 |
+| Nathália Gomes da Silva  | 554945 |
